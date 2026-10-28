@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]); kt bs panggil semua seeder di sini
         $this->call([
-            UserSeeder::class
+            UserSeeder::class,
+            SettingSeeder::class
         ]);
     }
 }

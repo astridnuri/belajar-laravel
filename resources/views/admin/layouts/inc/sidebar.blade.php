@@ -62,7 +62,7 @@
             </a>
           </li>
           <li class="sidebar-menu-item">
-            <a href="page-404.html" class="sidebar-menu-link" id="menu-404" title="404 Page">
+            <a href="{{ route('admin.settings') }}" class="sidebar-menu-link" id="menu-404" title="404 Page">
               <i class="bi bi-gear"></i>
               <span>Settings</span>
             </a>
@@ -77,8 +77,8 @@
       <img src="assets/images/avatar.png" alt="Administrator" class="sidebar-profile-img"
         onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop'">
       <div class="sidebar-profile-info">
-        <div class="sidebar-profile-name">{{ auth()->user()->name??'' }}</div>
-        <div class="sidebar-profile-email">{{ auth()->user()->email??'' }}</div>
+        <div class="sidebar-profile-name">{{ auth()->user()->name?? '' }}</div>
+        <div class="sidebar-profile-email">{{ auth()->user()->email?? '' }}</div>
       </div>
     </div>
   </div>
