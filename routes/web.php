@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BelajarController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\HomeController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index']);
+    // return view('welcome');
+    // return view('layout.app');
+
 Route::get('belajar', [BelajarController::class, 'index']);
 Route::get('tambah', [BelajarController::class, 'tambah'])->name('tambah'); //yg kiri nama route yg kanan nama function
 Route::post('actionTambah', [BelajarController::class, 'actionTambah'])->name('actionTambah'); //yg kiri nama route yg kanan nama function
@@ -24,6 +26,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::post('/actionLogin',[App\Http\Controllers\LoginController::class,'actionLogin'])->name('actionLogin');
     Route::resource('/dashboard',App\Http\Controllers\DashboardController::class);
     Route::resource('/user',App\Http\Controllers\UserController::class);
+    Route::resource('/category',App\Http\Controllers\CategoryController::class);
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

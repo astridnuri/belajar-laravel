@@ -60,7 +60,34 @@
     <!-- END: Page Header Banner -->
 
     <!-- START: Blank Page Content Area -->
-    <div class="card p-4 border-light shadow-sm">
+    @if(session('success'))
+        <div class="alert alert-success mb-3">
+            <i class="bi bi-check-circle-fil me-2"></i>
+            <strong>Success:</strong>{{session('success')}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-warning mb-3">
+            <i class="bi bi-exclamation-circle-fil me-2"></i>
+            <strong>Success:</strong>{{session('error')}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="alert alert-danger mb-3">
+            <i class="bi bi-exclamation-triangle-fil me-2"></i>
+            <strong>Warning:</strong>
+            There are some errors in form filling:
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    <div class="card p-4 border-light shadow-sm h-100">
       @yield('content')
     </div>
     <!-- END: Blank Page Content Area -->
