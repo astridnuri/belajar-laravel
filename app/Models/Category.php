@@ -8,4 +8,8 @@ class Category extends Model
 {
     //
     protected $fillable = ['name', 'slug', 'icon', 'sort_order'];
+
+    public function products() {
+        return $this->hasMany(Product::class); //artinya 1 kategori pny bnyak produk
+    }
 }
