@@ -13,7 +13,7 @@
             <div class="col-sm-6">
                 <div class="mb-3">
                     <label for="" class="form-label">Slug (optional)</label>
-                    <input type="number" name="stock" class="form-control">
+                    <input type="text" name="slug" class="form-control">
                 </div>
             </div>
             <div class="col-sm-6">
@@ -31,11 +31,14 @@
 
         <div class="mb-3">
             <label for="">Brief Description</label>
-            <input type="number" name="brief_description" class="form-control">
+            <input type="text" name="brief_description" class="form-control">
         </div>
         <div class="mb-3">
             <label for="">Description</label>
-            <textarea type="number" id="editor" name="description" cols="30" rows="10" class="form-control"></textarea>
+            <textarea name="description" cols="30" rows="10" class="d-none form-control"></textarea>
+            <div id="editor">
+                {!! old('description') !!}
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-3">

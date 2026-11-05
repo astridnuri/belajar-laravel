@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BelajarController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CatalogueController;
 
 
-Route::get('/', [HomeController::class, 'index']);
+
     // return view('welcome');
     // return view('layout.app');
 
@@ -33,3 +35,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 
 });
+
+Route::get('/', [HomeController::class, 'index']);
+Route::get('category/{slug}',[CatalogueController::class,'category'])->name('category.show');
+Route::get('product/{slug}',[CatalogueController::class,'product'])->name('product.show');

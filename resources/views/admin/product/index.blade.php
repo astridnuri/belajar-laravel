@@ -14,40 +14,45 @@
                 <th>Image</th>
                 <th>Category</th>
                 <th>Product Name</th>
-                <th>Stock</th>
+                <th>Slug</th>
                 <th>Price</th>
+                <th>Brief Description</th>
+                <th>Description</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            {{-- @dd($products)  utk ngecek ud masuk blm datanya--}}
+            {{-- @dd($products)  utk ngecek ud masuk blm datanya --}}
             @foreach ($products as $item)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>
-                    @if ($item->image !== null)
-                    <img src="{{ asset('storage/'.$item->image) }}" width="100" alt="{{ $item->name??'' }}">
-                    @else
-                    <span class="text-muted">Image Unavailable</span>
-                    @endif
-                </td>
-                <td>{{ $item->category->name ?? '-----' }}</td>
-                <td>{{ $item->name }}</td>
-                <td>{{ $item->stock }}</td>
-                <td>Rp {{ number_format($item->price,2,',','.') }}</td>
-                <td>
-                    <a class="table-btn-action" title="Edit" href="{{ route('admin.product.edit',$item->id) }}">
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>
+                        @if ($item->image !== null)
+                            <img src="{{ asset('storage/' . $item->image) }}" width="100" alt="{{ $item->name ?? '' }}">
+                        @else
+                            <span class="text-muted">Image Unavailable</span>
+                        @endif
+                    </td>
+                    <td>{{ $item->category->name ?? '-----' }}</td>
+                    <td>{{ $item->name }}</td>
+                    <td>{{ $item->slug }}</td>
+                    <td>Rp {{ number_format($item->price, 2, ',', '.') }}</td>
+                    <td>{{ $item->brief_description }}</td>
+                    <td>{!!  $item->description !!}</td>
+                    <td>
+                        <a class="table-btn-action" title="Edit" href="{{ route('admin.product.edit', $item->id) }}">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form action="{{ route('admin.product.destroy', $item->id) }}" method="post" class="d-inline" onsubmit="return confirm('Do you want to delete this data?')">
+                        <form action="{{ route('admin.product.destroy', $item->id) }}" method="post" class="d-inline"
+                            onsubmit="return confirm('Do you want to delete this data?')">
                             @csrf
                             @method('DELETE')
                             <button class="table-btn-action delete" title="Delete">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
-                </td>
-            </tr>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>
