@@ -88,7 +88,7 @@
         </div>
         <div class="mb-3"></div>
             <label for="">Image</label>
-            <input type="file" name="image" class="form-control">
+            <input type="file" name="images[]" class="form-control">
         </div>
         <div class="mb-3">
             <button type="submit" class="btn-custom btn-custom-primary">

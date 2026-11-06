@@ -31,7 +31,7 @@ class ProductController extends Controller
     {
         $categories = Category::get(); //atau all()
         $title = "Add Product || PPKD Sticker";
-        return view('admin.product.create', compact('categories')); //compact itu bwt ngeparsing
+        return view('admin.product.create', compact('categories', 'title')); //compact itu bwt ngeparsing
     }
 
     /**
@@ -39,6 +39,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated= $request->validate([
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,webp|max:2048',
@@ -50,6 +51,7 @@ class ProductController extends Controller
             'hvs_price' => 'nullable|integer',
             'doff_price' => 'nullable|integer',
             'glossy_price' => 'nullable|integer',
+            'cutting_price' => 'nullable|integer',
             'brief_description' => 'nullable|string',
             'description' => 'nullable|string',
 
@@ -64,14 +66,38 @@ class ProductController extends Controller
         //2 tabel product & product images
         //transaction
         DB::transaction(function() use($request, $validated){
+            $slugBase=!empty($validated['slug']) ? Str::slug($validated['slug']): Str::slug($validated['name']);
+            $slug=$slugBase;
+
+            $counter=1;
+            while (Product::where('slug',$slug)->exists()){
+                $slug=$slugBase . '-' . $counter;
+                $counter++;
+            }
             $product = Product::create([
                 'category_id'=>$validated['category_id'],
-                'name'=>$validated['name']
+                'name'=>$validated['name'],
+                'image'=>$validated['image'] ?? null,
+                'slug'=>$slug,
+                'price'=>$validated['price'],
+                'art_carton_price'=>$validated['art_carton_price'],
+                'art_paper_price'=>$validated['art_paper_price'],
+                'hvs_price'=>$validated['hvs_price'],
+                'doff_price'=>$validated['doff_price'],
+                'glossy_price'=>$validated['glossy_price'],
+                'cutting_price'=>$validated['cutting_price'],
+                'brief_description'=>$validated['brief_description'],
+                'description'=>$validated['description']
             ]);
             if($request->hasFile('images')){
                 $imageData=[];
+                $firstImageData=null;
+
                 foreach ($request->file('images') as $key=> $file) {
                     $path= $file->store('products', 'public');
+                    if ($key===0) {
+                        $firstImageData = $path;
+                    }
                     $imageData[]=[
                         'path'=>$path,
                         'alt'=>$request->input('alt.{$key}') ?? $product->name,
@@ -79,7 +105,13 @@ class ProductController extends Controller
                     ];
                 }
                 $product->images()->createMany($imageData);
+                if ($firstImageData) {
+                    $product->update([
+                        'image'=>$firstImageData
+                    ]);
+                }
             }
+
         });
         return redirect()->route('admin.product.index');
 
@@ -145,13 +177,36 @@ class ProductController extends Controller
             'description'=>'nullable|string'
         ]);
 
-        if ($request->hasFile('img')) {
-            if ($product->img) {
-                Storage::disk('public')->delete($product->img);
-            }
-            $validated['img'] = $request->file('img')->store('products', 'public');
-        }
+        // if ($request->hasFile('img')) {
+        //     if ($product->img) {
+        //         Storage::disk('public')->delete($product->img);
+        //     }
+        //     $validated['img'] = $request->file('img')->store('products', 'public');
+        // }
 
+        if ($request->hasFile('images')) {
+            $imageData = [];
+            $firstImageData = null;
+
+            foreach ($request->file('images') as $key => $file) {
+                $path = $file->store('products', 'public');
+                if ($key === 0) {
+                    $firstImageData = $path;
+                }
+                $imageData[] = [
+                    'path' => $path,
+                    'alt' => $request->input('alt.{$key}') ?? $product->name,
+                    'sort_order' => $key + 1
+                ];
+            }
+            $product->images()->createMany($imageData);
+            if ($firstImageData) {
+                $product->update([
+                    'image' => $firstImageData
+                ]);
+            }
+        }
+        
         $validated['slug'] = $validated['slug'] ? Str::slug($validated['slug']) : Str::slug($validated['name']);
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
         // return $validated;
@@ -164,14 +219,17 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product) //sblmnya string $id
     {
         //
-        $product = Product::find($id);
+        $product ->delete(); //sblmnya Product::find($id);
 
-        if ($product->img) {
-            Storage::disk('public')->delete($product->img);
-        }
-        $product->delete();
+        // if ($product->img) {
+        //     Storage::disk('public')->delete($product->img);
+        // }
+
+        // Category::find($id)->delete(); ini klo msh pake params string $id
+        //Category::where('id',$id)->delete();
+        return redirect()->route('admin.product.index')->with('success', 'Product deleted');
     }
 }
