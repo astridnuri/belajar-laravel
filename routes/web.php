@@ -2,10 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BelajarController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryBlogController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CatalogueController;
+use App\Http\Controllers\PageController;
 
 
 
@@ -26,10 +28,13 @@ Route::post('actionBagi', [BelajarController::class, 'actionBagi'])->name('actio
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/login',[App\Http\Controllers\LoginController::class,'login']);
     Route::post('/actionLogin',[App\Http\Controllers\LoginController::class,'actionLogin'])->name('actionLogin');
+
     Route::resource('/dashboard',App\Http\Controllers\DashboardController::class);
     Route::resource('/user',App\Http\Controllers\UserController::class);
     Route::resource('/category',App\Http\Controllers\CategoryController::class);
     Route::resource('/product',App\Http\Controllers\ProductController::class);
+    Route::resource('/category_blog', CategoryBlogController::class);
+    Route::resource('/blog', BlogController::class);
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
@@ -37,5 +42,10 @@ Route::prefix('admin')->name('admin.')->group(function(){
 });
 
 Route::get('/', [HomeController::class, 'index']);
-Route::get('category/{slug}',[CatalogueController::class,'category'])->name('category.show');
-Route::get('product/{slug}',[CatalogueController::class,'product'])->name('product.show');
+Route::get('/category/{slug}',[CatalogueController::class,'category'])->name('category.show');
+Route::get('product',[CatalogueController::class,'listing'])->name('product.index');
+Route::get('/product/{slug}', [CatalogueController::class, 'product'])->name('product.show');
+
+Route::get('faq', [PageController::class, 'faq'])->name('faq.index');
+Route::get('contact', [PageController::class, 'contact'])->name('contact.index');
+Route::get('blog', [PageController::class, 'blog'])->name('blog.index');

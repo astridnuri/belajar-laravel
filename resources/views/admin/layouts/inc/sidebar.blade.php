@@ -56,6 +56,12 @@
             </a>
           </li>
           <li class="sidebar-menu-item">
+            <a href="{{ route('admin.category_blog.index') }}" class="sidebar-menu-link" id="menu-category-blog" title="Blog Category">
+              <i class="bi bi-file-earmark"></i>
+              <span>Blog Category</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
             <a href="{{ route('admin.user.index') }}" class="sidebar-menu-link" id="menu-loginpage" title="User">
               <i class="bi bi-people"></i>
               <span>Users</span>

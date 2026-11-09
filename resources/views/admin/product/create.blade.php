@@ -88,7 +88,22 @@
         </div>
         <div class="mb-3"></div>
             <label for="">Image</label>
-            <input type="file" name="images[]" class="form-control">
+            <div class="row align-items-center mb-2 image-input-row">
+                <div class="col-md-5">
+                    <input type="file" name="images[]" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <input type="text" name="alt[]" class="form-control">
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger w-100" onclick="removeImageInput(this)" disabled>
+                        x
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary w-30" id="add-image-btn">
+                    + Add More Image
+            </button>
         </div>
         <div class="mb-3">
             <button type="submit" class="btn-custom btn-custom-primary">
