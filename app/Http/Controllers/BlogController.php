@@ -39,24 +39,26 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        $validated= $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:60',
             'blog_category_id' => 'required|exists:category_blogs,id',
             'brief_description' => 'nullable|string',
-            'slug' => 'nullable|string|unique:products, slug,',
+            'slug' => 'nullable|string|unique:category_blogs,slug,',
             'content' => 'nullable|string',
             'author' => 'nullable|string',
             //validasi product images
             'cover_path' => 'image|mimes:png,jpg,jpeg,gif,webp|max:2048'
         ]);
 
+
         //2 tabel product & product images
         //transaction
 
-        if($request->hasFile('cover_path')) {
-            $validated['cover_path']=$request->file('cover_path')->store('blogs', 'public');
+        if ($request->hasFile('cover_path')) {
+            $validated['cover_path'] = $request->file('cover_path')->store('blogs', 'public');
         }
-        $validated['slug']=$validated['slug'] ? Str::slug($validated['slug']): Str::slug($validated['name']);
+        $validated['slug'] = $validated['slug'] ? Str::slug($validated['slug']) : Str::slug($validated['name']);
+        // return $validated;
         Blog::create($validated);
 
         return redirect()->route('admin.blog.index')->with('success', 'Blog successfully added');
@@ -74,11 +76,12 @@ class BlogController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Blog $blog)
     {
 
         $title = "Edit Blog || PPKD Sticker";
-        return view('admin.blog.edit', compact('blog', 'title'));
+        $categories = CategoryBlog::get();
+        return view('admin.blog.edit', compact('blog', 'title', 'categories'));
     }
 
     /**
@@ -91,11 +94,11 @@ class BlogController extends Controller
             'name' => 'required|string|max:60',
             'blog_category_id' => 'required|exists:category_blogs,id',
             'brief_description' => 'nullable|string',
-            'slug' => 'nullable|string|unique:products, slug,',
+            'slug' => 'nullable|string|unique:category_blogs,slug,',
             'content' => 'nullable|string',
             'author' => 'nullable|string',
             //validasi product images
-            'cover_path' => 'image|mimes:png,jpg,jpeg,gif,webp|max:2048'
+            'cover_path' => 'nullable|image|mimes:png,jpg,jpeg,gif,webp|max:2048'
         ]);
 
         //2 tabel product & product images
@@ -103,7 +106,7 @@ class BlogController extends Controller
 
         if ($request->hasFile('cover_path')) {
             //ada gk gambar di tabel blogs
-            if($blog->cover_path) {
+            if ($blog->cover_path) {
                 Storage::disk('public')->delete($blog->cover_path);
             }
             $validated['cover_path'] = $request->file('cover_path')->store('blogs', 'public');
@@ -127,7 +130,7 @@ class BlogController extends Controller
             Storage::disk('public')->delete($blog->img);
         }
 
-        $blog ->delete(); //sblmnya Product::find($id);
+        $blog->delete(); //sblmnya Product::find($id);
         return redirect()->route('admin.blog.index')->with('success', 'Blog successfully deleted');
 
     }

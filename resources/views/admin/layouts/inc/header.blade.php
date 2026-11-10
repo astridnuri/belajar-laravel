@@ -94,8 +94,14 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item text-danger" href="page-login.html"><i class="bi bi-box-arrow-right"></i>
-                Logout</a></li>
+            <li>
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="button" class="btn btn-warning item-center">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout</li>
+                    </button>
+                </form>
           </ul>
         </div>
       </div>
